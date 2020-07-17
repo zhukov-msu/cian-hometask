@@ -4,8 +4,6 @@ from functions import *
 import re
 import Levenshtein
 from fuzzywuzzy import fuzz
-import nltk
-from nltk.tokenize import word_tokenize
 # import gensim
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -74,7 +72,7 @@ def build_geo_features(data):
 def build_text_features(data, models):
 	def get_len(txt1, txt2):
 		return [min(a,b)/max(a,b) for a,b in zip([len(x) for x in txt1], [len(x) for x in txt2])]
-		
+
 	def get_eng_perc(txt1, txt2):
 		fn_eng = lambda x: np.mean([1 if l in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' else 0 for l in x])
 		return [1 if max(a,b)==0 else min(a,b)/max(a,b) for a,b in zip([fn_eng(x) for x in txt1], [fn_eng(x) for x in txt2])]

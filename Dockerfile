@@ -1,12 +1,10 @@
-FROM continuumio/anaconda3
+FROM continuumio/miniconda3
 MAINTAINER "Alex Zhukov"
 
 RUN apt-get update && apt-get install -y libgtk2.0-dev && \
-    rm -rf /var/lib/apt/lists/* 
-#   && \
-#    /opt/conda/bin/conda install jupyter -y && \
-#    /opt/conda/bin/conda install numpy pandas scikit-learn matplotlib seaborn pyyaml h5py keras -y && \
-#    /opt/conda/bin/conda upgrade dask && \
+    rm -rf /var/lib/apt/lists/* && \
+    /opt/conda/bin/conda install jupyter -y && \
+    /opt/conda/bin/conda install -y numpy pandas scikit-learn matplotlib seaborn pyyaml h5py flask
     
 RUN pip install tqdm==4.43.0 pandas_profiling folium geopy python-Levenshtein fuzzywuzzy xgboost pymorphy2==0.8 spacy==2.1.9 psycopg2-binary gensim
 
