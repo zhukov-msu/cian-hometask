@@ -8,7 +8,6 @@ import nltk
 from nltk.tokenize import word_tokenize
 # import gensim
 from scipy.sparse import csr_matrix
-import sparse_dot_topn.sparse_dot_topn as ct
 from sklearn.feature_extraction.text import TfidfVectorizer
 from geopy import distance
 from scipy.spatial.distance import cosine
@@ -45,10 +44,7 @@ def build_geo_features(data):
 
 	geo_x = [literal_eval(elem['geo_x']) for elem in data]
 	geo_y = [literal_eval(elem['geo_y']) for elem in data]
-	# print(type(geo_x[0]))
-	# print(geo_x[0])
-	# x = literal_eval(geo_x[0])
-	# print(type(x))
+
 	coord_x = [(elem['coordinates']['lat'], elem['coordinates']['lng']) for elem in geo_x]
 	coord_y = [(elem['coordinates']['lat'], elem['coordinates']['lng']) for elem in geo_y]
 
@@ -60,7 +56,6 @@ def build_geo_features(data):
 
 	namelist_x = [[x['name'] for x in elem] for elem in addr_x]
 	namelist_y = [[x['name'] for x in elem] for elem in addr_y]
-	# print(namelist_y)
 
 	geo_addr_lev1 = get_geo_addr_lev1(userInput_x, userInput_y)
 	geo_addr_lev2 = get_geo_addr_lev2(namelist_x, namelist_y)
@@ -79,13 +74,11 @@ def build_geo_features(data):
 def build_text_features(data, models):
 	def get_len(txt1, txt2):
 		return [min(a,b)/max(a,b) for a,b in zip([len(x) for x in txt1], [len(x) for x in txt2])]
-		# a, b = len(txt1), len(txt2)
-		# return min(a,b)/max(a,b)
+		
 	def get_eng_perc(txt1, txt2):
 		fn_eng = lambda x: np.mean([1 if l in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' else 0 for l in x])
 		return [1 if max(a,b)==0 else min(a,b)/max(a,b) for a,b in zip([fn_eng(x) for x in txt1], [fn_eng(x) for x in txt2])]
-		# a, b = fn_eng(txt1), fn_eng(txt2)
-		# return 1 if max(a,b)==0 else min(a,b)/max(a,b)
+
 	def get_w2v_similarity(txt1, txt2, w2vmodel=models.wv_model):
 		vectors = get_w2v_vectors(
 			txt1,
@@ -137,7 +130,6 @@ def build_other_features(data):
 
 	bargainterms_x = [literal_eval(row['bargainterms_x']) for row in data]
 	bargainterms_y = [literal_eval(row['bargainterms_y']) for row in data]
-	# print(bargainterms_y[0])
 
 	# deposits = [(bargainterms_x['deposit'], bargainterms_y['deposit']) for row in data]
 	# deposit_rate = [1 if max(np.nan_to_num(a),np.nan_to_num(b))==0 else min(np.nan_to_num(a),np.nan_to_num(b))/max(np.nan_to_num(a),np.nan_to_num(b)) for a,b in deposits]
@@ -156,6 +148,3 @@ def build_features(data, models):
 	df_all = df_all[['geo_addr_lev1','geo_addr_lev2', 'geo_addr_percent_intersect','geo_addr_fw','geo_distances','text_len','eng_perc','txt_similarity_feature','cosine_tfidf_ng','price_rate','total_area_eq','rcnt_eq']]
 	return df_all
 
-
-
-# def parse_json(data):
